@@ -22,6 +22,9 @@ namespace WoWTagLib.Readers
 
         public void Load()
         {
+            Tags = [];
+            FileDataIDMap = [];
+
             var tagsFile = Path.Combine(Folder, "meta", "tags.csv");
             if (!File.Exists(tagsFile))
                 throw new FileNotFoundException("tags.csv file not found!");
@@ -146,6 +149,8 @@ namespace WoWTagLib.Readers
                     csv.WriteRecords(mappings);
                 }
             }
+
+            // TODO: Delete any orphaned files from tags that have since been removed or renamed
         }
     }
 }
