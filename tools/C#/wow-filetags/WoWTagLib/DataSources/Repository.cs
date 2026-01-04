@@ -133,6 +133,9 @@ namespace WoWTagLib.DataSources
             if (!FileDataIDMap.TryGetValue(fileDataID, out var tagsForFDID))
                 FileDataIDMap[fileDataID] = tagsForFDID = [];
 
+            if(!tag.AllowMultiple)
+                tagsForFDID.RemoveAll(t => t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
+
             tagsForFDID.Add((tag.Key, source, tagValue));
 
             UnsavedChanges = true;
