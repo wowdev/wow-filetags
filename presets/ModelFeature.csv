@@ -1,1 +1,5 @@
 Option,Description,Aliases
+Animations,Has Animations,
+Physics,Has Physics,
+Lights,Has Lights,
+Sounds,Has Sounds,

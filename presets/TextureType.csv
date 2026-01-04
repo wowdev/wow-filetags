@@ -1,1 +1,6 @@
 Option,Description,Aliases
+Item Skin,Item Skin,
+Creature Skin,Creature Skin,
+Baked NPC,Pre-baked NPC texture,
+Minimap,Minimap texture,
+MapTexture,Pre-baked terrain textures for distance,

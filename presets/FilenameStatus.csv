@@ -1,6 +1,6 @@
 Option,Description,Aliases
 Official,Official filename from Blizzard,
 Community,Entirely community-named file,
-CommunityOfficialBasename,Community-set folder but official base filename,
+Community (Official Basename),Community-set folder but official base filename (manually set),
 Unnamed,Currently unnamed,
 Placeholder,Placeholder or temporary name,
