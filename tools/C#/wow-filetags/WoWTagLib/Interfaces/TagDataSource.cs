@@ -10,6 +10,11 @@ namespace WoWTagLib.Interfaces
         public List<Tag> GetTags();
 
         /// <summary>
+        /// Get FileDataID map.
+        /// </summary>
+        public Dictionary<int, List<(string Tag, MappingSource TagSource, string TagValue)>> GetFileDataIDMap();
+
+        /// <summary>
         /// Get tags for a specific FileDataID.
         /// </summary>
         public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID);

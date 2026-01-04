@@ -29,6 +29,8 @@ namespace WoWTagLib.DataSources
 
         public List<Tag> GetTags() => Tags;
 
+        public Dictionary<int, List<(string Tag, MappingSource TagSource, string TagValue)>> GetFileDataIDMap() => FileDataIDMap;
+
         public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID)
         {
             if (FileDataIDMap.TryGetValue(fileDataID, out var tags))
