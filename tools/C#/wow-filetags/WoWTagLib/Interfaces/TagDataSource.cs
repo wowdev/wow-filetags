@@ -30,6 +30,26 @@ namespace WoWTagLib.Interfaces
         public void AddOrUpdateTagOption(string tagKey, string name, string description, string aliases);
 
         /// <summary>
+        /// Deletes a tag option.
+        /// </summary>
+        public void DeleteTagOption(string tagKey, string name);
+
+        /// <summary>
+        /// Maps a FileDataID to a tag & value.
+        /// </summary>
+        public void AddTagToFDID(int fileDataID, string tagKey, string tagSource, string tagValue);
+
+        /// <summary>
+        /// Remove tag from a FileDataID.
+        /// </summary>
+        public void RemoveTagFromFDID(int fileDataID, string tagKey, string tagValue);
+
+        /// <summary>
+        /// Gets whether this data source requires a separate saving step. e.g. disk-based sources will require this, in-memory or database-based ones might not.
+        /// </summary>
+        public bool RequiresSavingStep();
+
+        /// <summary>
         /// Gets whether there are unsaved changes.
         /// </summary>
         public bool HasUnsavedChanges();

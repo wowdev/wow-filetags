@@ -23,15 +23,11 @@ namespace WoWTagLib.DataSources
             Load();
         }
 
-        public bool HasUnsavedChanges()
-        {
-            return UnsavedChanges;
-        }
+        public bool RequiresSavingStep() => true;
 
-        public List<Tag> GetTags()
-        {
-            return Tags;
-        }
+        public bool HasUnsavedChanges() => UnsavedChanges;
+
+        public List<Tag> GetTags() => Tags;
 
         public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID)
         {
