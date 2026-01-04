@@ -1,16 +1,16 @@
-Key;Name;Description;Type;Category;AllowMultiple
-FileType;File Type;Type of file, e.g. MP3, Group WMO, Root ADT, M2, etc;Preset;Technical;false
-ExpansionAdded;Expansion (Added);Which expansion the file was added in;Preset;Historical;false
-PatchAdded;Patch (Added);Which patch the file was added in;Custom;Historical;false
-BuildAdded;Build (Added);Which build the file was added in;Custom;Historical;false
-ModelType;Model type;Type of model;Preset;Classification;true
-ParentFile;Parent file;Files referencing this file (experimental/limit test);Custom;Technical;true
-FilenameStatus;Filename status;Filename status (tied to wow-listfile repo, automated test);Preset;Metadata;true
-Continent;;Continent this file is related to;Custom;Location;true
-Zone;;Zone this file is related to;Custom;Location;true
-DoodadSet;Doodad Set;Doodad set this file is a part of;Custom;Classification;false
-MusicType;Music type;Type of music (zone music, scene music, etc);Preset;Classification;false
-TextureType;Texture type;Type of texture (icon, creature skin, etc);Preset;Classification;true
-MountType;Mount type;Type of mount (ground, flying, customizable, etc);Preset;Classification;true
-ItemSource;Item source;Source of related item (e.g. drop, trading post, shop, etc);Preset;Classification;true
-ModelFeature;Model feature;Model features (e.g. physics, animations, particles);Preset;Technical;true
+Key,Name,Description,Type,Category,AllowMultiple
+FileType,File Type,"Type of file, e.g. MP3, Group WMO, Root ADT, M2, etc",Preset,Technical,false
+ExpansionAdded,Expansion (Added),Which expansion the file was added in,Preset,Historical,false
+PatchAdded,Patch (Added),Which patch the file was added in,Custom,Historical,false
+BuildAdded,Build (Added),Which build the file was added in,Custom,Historical,false
+ModelType,Model type,Type of model,Preset,Classification,true
+ParentFile,Parent file,Files referencing this file (experimental/limit test),Custom,Technical,true
+FilenameStatus,Filename status,"Filename status (tied to wow-listfile repo, automated test)",Preset,Metadata,true
+Continent,,Continent this file is related to,Custom,Location,true
+Zone,,Zone this file is related to,Custom,Location,true
+DoodadSet,Doodad Set,Doodad set this file is a part of,Custom,Classification,false
+MusicType,Music type,"Type of music (zone music, scene music, etc)",Preset,Classification,false
+TextureType,Texture type,"Type of texture (icon, creature skin, etc)",Preset,Classification,true
+MountType,Mount type,"Type of mount (ground, flying, customizable, etc)",Preset,Classification,true
+ItemSource,Item source,"Source of related item (e.g. drop, trading post, shop, etc)",Preset,Classification,true
+ModelFeature,Model feature,"Model features (e.g. physics, animations, particles)",Preset,Technical,true
