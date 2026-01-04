@@ -11,7 +11,7 @@ Keep in mind that CSV file structure can change in the future. There are also a 
 Available tags are specified in this file.
 #### Fields
 - Key: Name for tag with no spaces/special chars (used as filename elsewhere)
-- Name: Name override, can be left empty to just use key
+- Name: Name, can be same as key but with spaces/special characters
 - Description: Longer description of tag
 - Type: `Preset` for tags limited to preset options (see presets below) or `Custom`
 - Category: Tag category, e.g. "Technical", "Historical", "Classification" or "Location"
