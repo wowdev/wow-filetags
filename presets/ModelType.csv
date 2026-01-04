@@ -1,0 +1,12 @@
+Option;Description;Aliases
+Creature;Creature model;
+Spell;Spell model;
+Mount;Mount (rideable creature);
+Pet;Battle pet or companion pet;
+Doodad;Environmental object or prop;
+Decor;Player housing decoration;
+Character;Player character model;
+Armor;Armor piece;
+Weapon;Weapon model;
+Item;Generic item model;
+Glue;Interface glue screen;

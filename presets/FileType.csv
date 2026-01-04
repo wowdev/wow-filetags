@@ -1,0 +1,32 @@
+Option;Description;Aliases
+MP3;MP3 file (music/cinematic tracks/narration)
+OGG;Ogg Vorbis file (sounds)
+BLP Texture;BLP Texture
+M2 Model;M2 model file (creatures, items, doodads)
+M3 Model;M3 model file
+Skin;M2 skin data file
+Anim;M2 animation file
+Bone;M2 bone data file
+Root WMO;World Model Object (root)
+Group WMO;World Model Object (group)
+Root ADT;Terrain file (root)
+Tex0 ADT;Terrain file (texture)
+Obj0 ADT;Terrain file (objects)
+Obj1 ADT;Terrain file (objects LOD)
+LOD ADT;Terrain file (geometry/liquid LOD)
+Root WDT;Map metadata file (root)
+LGT WDT;Map metadata file (light)
+OCC WDT;Map metadata file (occulusion)
+Fogs WDT;Map metadata file (fog)
+MPV WDT;Map metadata file (particulate volumes)
+Preload WDT;Map metadata file (preload files for warband scenes)
+AVI;AVI video file
+DBC;Database Client file
+DB2;Database Client file (Cata+)
+BLS;Shader file
+HTML;HTML file
+XML;XML file (interface)
+LUA;LUA script file (interface)
+TOC;Table of contents (interface)
+SRT;Subtitle file
+GFAT;Bundle of BLS files
