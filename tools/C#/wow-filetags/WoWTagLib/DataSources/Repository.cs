@@ -1,12 +1,15 @@
-﻿using WoWTagLib.Types;
+﻿using WoWTagLib.Interfaces;
+using WoWTagLib.Types;
 
-namespace WoWTagLib.Readers
+namespace WoWTagLib.DataSources
 {
-    public class Repository
+    public class Repository : ITagDataSource
     {
         private readonly string Folder;
         private readonly bool Verify;
         private readonly bool Verbose;
+
+        private bool UnsavedChanges;
 
         public List<Tag> Tags = [];
         public Dictionary<int, List<(string Tag, MappingSource TagSource, string TagValue)>> FileDataIDMap = [];
@@ -20,10 +23,140 @@ namespace WoWTagLib.Readers
             Load();
         }
 
+        public bool HasUnsavedChanges()
+        {
+            return UnsavedChanges;
+        }
+
+        public List<Tag> GetTags()
+        {
+            return Tags;
+        }
+
+        public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID)
+        {
+            if (FileDataIDMap.TryGetValue(fileDataID, out var tags))
+                return tags;
+            else
+                return [];
+        }
+
+        public void AddOrUpdateTag(string name, string key, string description, string type, string category, bool allowMultiple)
+        {
+            var newTag = new Tag
+            {
+                Key = key,
+                Name = name,
+                Description = description,
+                Type = type == "Custom" ? TagType.Custom : TagType.Preset,
+                Category = category,
+                AllowMultiple = allowMultiple,
+                Presets = []
+            };
+
+            var tagIndex = Tags.FindIndex(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (tagIndex != -1)
+            {
+                newTag.Presets = Tags[tagIndex].Presets;
+                Tags[tagIndex] = newTag;
+            }
+            else
+            {
+                Tags.Add(newTag);
+            }
+
+            UnsavedChanges = true;
+        }
+
+        public void DeleteTag(string key)
+        {
+            var tagIndex = Tags.FindIndex(t => t.Key.Equals(key, StringComparison.OrdinalIgnoreCase));
+            if (tagIndex == -1)
+                throw new Exception($"Tag with key '{key}' does not exist in the repository.");
+
+            Tags.RemoveAt(tagIndex);
+
+            // Also remove tag from all FileDataID mappings
+            foreach (var fdid in FileDataIDMap.Keys.ToList())
+            {
+                FileDataIDMap[fdid] = [.. FileDataIDMap[fdid].Where(t => !t.Tag.Equals(key, StringComparison.OrdinalIgnoreCase))];
+            }
+
+            UnsavedChanges = true;
+        }
+
+        public void AddOrUpdateTagOption(string tagKey, string name, string description, string aliases)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            var targetTag = Tags.FirstOrDefault(t => t.Key == tagKey);
+            if (targetTag == null)
+                throw new Exception($"Tag with key '{tagKey}' does not exist in the repository.");
+
+            var newPreset = new TagPreset()
+            {
+                Aliases = aliases,
+                Description = description,
+                Option = name
+            };
+
+            var presetIndex = targetTag.Presets.FindIndex(t => t.Option.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (presetIndex != -1)
+                targetTag.Presets[presetIndex] = newPreset;
+            else
+                targetTag.Presets.Add(newPreset);
+
+            UnsavedChanges = true;
+        }
+
+        public void DeleteTagOption(string tagKey, string name)
+        {
+            var targetTag = Tags.FirstOrDefault(t => t.Key == tagKey);
+            if (targetTag == null)
+                throw new Exception($"Tag with key '{tagKey}' does not exist in the repository.");
+
+            var presetIndex = targetTag.Presets.FindIndex(t => t.Option.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (presetIndex == -1)
+                return;
+
+            targetTag.Presets.RemoveAt(presetIndex);
+            UnsavedChanges = true;
+        }
+
+        public void AddTagToFDID(int fileDataID, string tagKey, string tagSource, string tagValue)
+        {
+            if (!Enum.TryParse<MappingSource>(tagSource, out var source))
+                throw new Exception($"Invalid tag source '{tagSource}'.");
+
+            var tag = Tags.FirstOrDefault(t => t.Key.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
+            if (tag == null)
+                throw new Exception($"Tag '{tagKey}' does not exist in the repository.");
+
+            if (!FileDataIDMap.TryGetValue(fileDataID, out var tagsForFDID))
+                FileDataIDMap[fileDataID] = tagsForFDID = [];
+
+            tagsForFDID.Add((tag.Key, source, tagValue));
+
+            UnsavedChanges = true;
+        }
+
+        public void RemoveTagFromFDID(int fileDataID, string tagKey, string tagValue)
+        {
+            if (!FileDataIDMap.TryGetValue(fileDataID, out var tagsForFDID))
+                return;
+
+            FileDataIDMap[fileDataID] = [.. tagsForFDID.Where(t => !(t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && t.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase)))];
+
+            UnsavedChanges = true;
+        }
+
         public void Load()
         {
             Tags = [];
             FileDataIDMap = [];
+            UnsavedChanges = false;
 
             var tagsFile = Path.Combine(Folder, "meta", "tags.csv");
             if (!File.Exists(tagsFile))
@@ -149,6 +282,8 @@ namespace WoWTagLib.Readers
                     csv.WriteRecords(mappings);
                 }
             }
+
+            UnsavedChanges = false;
 
             // TODO: Delete any orphaned files from tags that have since been removed or renamed
         }

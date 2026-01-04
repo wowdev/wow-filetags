@@ -14,7 +14,7 @@
 
             if (mode == "rewrite")
             {
-                var repo = new WoWTagLib.Readers.Repository(args[1], verify: true, verbose: true);
+                var repo = new WoWTagLib.DataSources.Repository(args[1], verify: true, verbose: true);
                 repo.Save();
             }
         }
