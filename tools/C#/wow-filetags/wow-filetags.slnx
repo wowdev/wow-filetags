@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="TagTool/TagTool.csproj" />
+  <Project Path="WoWTagLib/WoWTagLib.csproj" />
+</Solution>

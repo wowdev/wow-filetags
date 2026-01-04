@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TagTool": {
+      "commandName": "Project",
+      "commandLineArgs": "rewrite ../../../../../../../"
+    }
+  }
+}
