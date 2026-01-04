@@ -1,16 +1,16 @@
 Key,Name,Description,Type,Category,AllowMultiple
-FileType,File Type,"Type of file, e.g. MP3, Group WMO, Root ADT, M2, etc",Preset,Technical,false
-ExpansionAdded,Expansion (Added),Which expansion the file was added in,Preset,Historical,false
-PatchAdded,Patch (Added),Which patch the file was added in,Custom,Historical,false
-BuildAdded,Build (Added),Which build the file was added in,Custom,Historical,false
-ModelType,Model type,Type of model,Preset,Classification,true
-ParentFile,Parent file,Files referencing this file (experimental/limit test),Custom,Technical,true
-FilenameStatus,Filename status,"Filename status (tied to wow-listfile repo, automated test)",Preset,Metadata,true
-Continent,Continent,Continent this file is related to,Custom,Location,true
-Zone,Zone,Zone this file is related to,Custom,Location,true
-DoodadSet,Doodad Set,Doodad set this file is a part of,Custom,Classification,false
-MusicType,Music type,"Type of music (zone music, scene music, etc)",Preset,Classification,false
-TextureType,Texture type,"Type of texture (icon, creature skin, etc)",Preset,Classification,true
-MountType,Mount type,"Type of mount (ground, flying, customizable, etc)",Preset,Classification,true
-ItemSource,Item source,"Source of related item (e.g. drop, trading post, shop, etc)",Preset,Classification,true
-ModelFeature,Model feature,"Model features (e.g. physics, animations, particles)",Preset,Technical,true
+FileType,File Type,"Type of file, e.g. MP3, Group WMO, Root ADT, M2, etc",Preset,Technical,False
+ExpansionAdded,Expansion (Added),Which expansion the file was added in,Preset,Historical,False
+PatchAdded,Patch (Added),Which patch the file was added in,Custom,Historical,False
+BuildAdded,Build (Added),Which build the file was added in,Custom,Historical,False
+ModelType,Model type,Type of model,Preset,Classification,True
+ParentFile,Parent file,Files referencing this file (experimental/limit test),Custom,Technical,True
+FilenameStatus,Filename status,"Filename status (tied to wow-listfile repo, automated test)",Preset,Metadata,True
+Continent,Continent,Continent this file is related to,Custom,Location,True
+Zone,Zone,Zone this file is related to,Custom,Location,True
+DoodadSet,Doodad Set,Doodad set this file is a part of,Custom,Classification,False
+MusicType,Music type,"Type of music (zone music, scene music, etc)",Preset,Classification,False
+TextureType,Texture type,"Type of texture (icon, creature skin, etc)",Preset,Classification,True
+MountType,Mount type,"Type of mount (ground, flying, customizable, etc)",Preset,Classification,True
+ItemSource,Item source,"Source of related item (e.g. drop, trading post, shop, etc)",Preset,Classification,True
+ModelFeature,Model feature,"Model features (e.g. physics, animations, particles)",Preset,Technical,True
