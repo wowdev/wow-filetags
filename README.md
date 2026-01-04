@@ -25,7 +25,11 @@ Preset options for tags with the "Preset" type.
 - Aliases: Comma-separated list of aliases for the option
 
 ### mappings/(tag key).csv
-Mappings between FileDataIDs and tag values.
+Mappings between FileDataIDs and tag values. 
+
+> [!NOTE]  
+> Mapping CSVs should remain under 100MB in size. They could realistically only be larger if there was a mapping for each file (or several per file) ***AND*** the option being very long. For a sense of scale, the [community listfile CSV](https://github.com/wowdev/wow-listfile/releases) is currently ~140MB *(which is why it is no longer in the repo, but in releases)*. If we ever approach this, tooling should be adjusted to support split up mappings. They would still be combined for releases similar to the listfile.
+
 #### Fields
 - FDID: FileDataID of file
 - Source: `Auto` for automated mappings by tools or `Manual`.`Auto` mappings can be remapped by automated tools, manual mappings can not
