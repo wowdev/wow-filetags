@@ -14,3 +14,8 @@ TextureType,Texture Type,"Type of texture (icon, creature skin, etc)",Preset,Cla
 MountType,Mount Type,"Type of mount (ground, flying, customizable, etc)",Preset,Classification,True
 ItemSource,Item Source,"Source of related item (e.g. drop, trading post, shop, etc)",Preset,Classification,True
 ModelFeature,Model Feature,"Model features (e.g. physics, animations, particles)",Preset,Technical,True
+SoundType,Sound Type,"Sound type (e.g. character, UI, spell, etc)",Preset,Classification,True
+Race,Race,File is tied to a player/NPC race,Preset,Classification,True
+CreatureName,CreatureName,Creature name (e.g. NPC or mount name) tied to this file,Custom,Classification,True
+SpellName,SpellName,Spell names using this file,Custom,Classification,True
+ItemName,ItemName,Item names using this file,Custom,Classification,True

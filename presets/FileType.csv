@@ -1,7 +1,7 @@
 Option,Description,Aliases
 MP3,MP3 file (music/cinematic tracks/narration),
 OGG,Ogg Vorbis file (sounds),
-BLP Texture,BLP Texture,
+BLP,BLP Texture,
 M2 Model,M2 model file (creatures/items/doodads),
 M3 Model,M3 model file,
 Skin,M2 skin data file,
