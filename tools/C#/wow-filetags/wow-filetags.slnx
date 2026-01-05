@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="TagTool/TagTool.csproj" />
+  <Project Path="WoWTagLib.AutoTagging/WoWTagLib.AutoTagging.csproj" Id="626b0adb-6937-4814-83a3-da2b77c69952" />
   <Project Path="WoWTagLib/WoWTagLib.csproj" />
 </Solution>

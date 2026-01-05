@@ -20,6 +20,11 @@ namespace WoWTagLib.Interfaces
         public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID);
 
         /// <summary>
+        /// Get FileDataIDs (and tag source/value) for a specific tag.
+        /// </summary>
+        public List<(int FileDataID, MappingSource TagSource, string TagValue)> GetFileDataIDsByTag(string tagKey);
+
+        /// <summary>
         /// Adds or updates a tag.
         /// </summary>
         public void AddOrUpdateTag(string name, string key, string description, string type, string category, bool allowMultiple);

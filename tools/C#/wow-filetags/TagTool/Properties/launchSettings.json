@@ -2,7 +2,7 @@
   "profiles": {
     "TagTool": {
       "commandName": "Project",
-      "commandLineArgs": "rewrite ../../../../../../../"
+      "commandLineArgs": "autotag ../../../../../../../ wow_beta all \"C:\\World of Warcraft\""
     }
   }
 }

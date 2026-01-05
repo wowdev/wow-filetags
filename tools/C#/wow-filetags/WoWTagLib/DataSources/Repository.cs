@@ -39,6 +39,19 @@ namespace WoWTagLib.DataSources
                 return [];
         }
 
+        public List<(int FileDataID, MappingSource TagSource, string TagValue)> GetFileDataIDsByTag(string tagKey)
+        {
+            // TODO: This likely won't scale for obvious reasons. Might need a separate lookup, but need to beware of RAM in this economy. Revisit later.
+            var results = new List<(int FileDataID, MappingSource TagSource, string TagValue)>();
+            foreach (var entry in FileDataIDMap)
+            {
+                foreach (var tag in entry.Value)
+                    if (tag.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase))
+                        results.Add((entry.Key, tag.TagSource, tag.TagValue));
+            }
+            return results;
+        }
+
         public void AddOrUpdateTag(string name, string key, string description, string type, string category, bool allowMultiple)
         {
             var newTag = new Tag
@@ -274,6 +287,8 @@ namespace WoWTagLib.DataSources
                         }
                     }
                 }
+
+                mappings = [.. mappings.OrderBy(x => x.FDID)];
 
                 using (var writer = new StreamWriter(mappingFile))
                 using (var csv = new CsvHelper.CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
