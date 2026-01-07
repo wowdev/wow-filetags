@@ -1,7 +1,5 @@
 ﻿using System.Text;
-using TACTSharp;
 using WoWTagLib.AutoTagging.Services;
-using WoWTagLib.Types;
 
 namespace WoWTagLib.AutoTagging.Taggers
 {
@@ -9,7 +7,7 @@ namespace WoWTagLib.AutoTagging.Taggers
     {
         public static void Tag()
         {
-            if(AutoTagger.DataSource == null)
+            if (AutoTagger.DataSource == null)
                 throw new Exception("AutoTagger DataSource is not initialized.");
 
             var tagLock = new Lock();
@@ -298,8 +296,8 @@ namespace WoWTagLib.AutoTagging.Taggers
                                     break;
                             }
 
-                            if(!string.IsNullOrEmpty(tagValue))
-                                lock(tagLock)
+                            if (!string.IsNullOrEmpty(tagValue))
+                                lock (tagLock)
                                     AutoTagger.DataSource.AddTagToFDID((int)unknownFile, "FileType", "Auto", tagValue);
                         }
                     }

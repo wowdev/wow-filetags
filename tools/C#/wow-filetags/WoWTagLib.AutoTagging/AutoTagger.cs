@@ -28,5 +28,15 @@ namespace WoWTagLib.AutoTagging
 
             tagMethod.Invoke(null, null);
         }
+
+        public static List<string> ListTaggers()
+        {
+            var taggerNamespace = "WoWTagLib.AutoTagging.Taggers";
+            var taggerTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => type.IsClass && type.Namespace == taggerNamespace && type.GetMethod("Tag") != null);
+
+            return [.. taggerTypes.Select(type => type.Name)];
+        }
     }
 }

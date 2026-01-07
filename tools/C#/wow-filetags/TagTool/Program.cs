@@ -86,7 +86,13 @@ namespace TagTool
                     throw new Exception("Failed to load build components");
 
                 var autoTagger = new AutoTagger(buildInstance, repo);
-                autoTagger.RunTagger("FileType");
+                //autoTagger.RunTagger("FileType");
+                var availableTaggers = AutoTagger.ListTaggers();
+                foreach (var tagger in availableTaggers)
+                {
+                    Console.WriteLine("Running autotagger: " + tagger);
+                    autoTagger.RunTagger(tagger);
+                }
                 repo.Save();
             }
             else

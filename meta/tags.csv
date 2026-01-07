@@ -19,3 +19,5 @@ Race,Race,File is tied to a player/NPC race,Preset,Classification,True
 CreatureName,CreatureName,Creature name (e.g. NPC or mount name) tied to this file,Custom,Classification,True
 SpellName,SpellName,Spell names using this file,Custom,Classification,True
 ItemName,ItemName,Item names using this file,Custom,Classification,True
+M2Size,M2 Size,Physical size of M2 model,Preset,Classification,False
+M2Complexity,M2 Complexity,M2 model complexity (todo: vertice count based? more?),Preset,Classification,False

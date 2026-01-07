@@ -44,11 +44,22 @@ namespace WoWTagLib.DataSources
             // TODO: This likely won't scale for obvious reasons. Might need a separate lookup, but need to beware of RAM in this economy. Revisit later.
             var results = new List<(int FileDataID, MappingSource TagSource, string TagValue)>();
             foreach (var entry in FileDataIDMap)
-            {
                 foreach (var tag in entry.Value)
                     if (tag.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase))
                         results.Add((entry.Key, tag.TagSource, tag.TagValue));
-            }
+
+            return results;
+        }
+
+        public List<(int FileDataID, MappingSource TagSource)> GetFileDataIDsByTagAndValue(string tagKey, string tagValue)
+        {
+            // TODO: This likely won't scale for obvious reasons. Might need a separate lookup, but need to beware of RAM in this economy. Revisit later.
+            var results = new List<(int FileDataID, MappingSource TagSource)>();
+            foreach (var entry in FileDataIDMap)
+                foreach (var tag in entry.Value)
+                    if (tag.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && tag.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase))
+                        results.Add((entry.Key, tag.TagSource));
+
             return results;
         }
 
