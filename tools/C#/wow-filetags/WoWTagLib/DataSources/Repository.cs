@@ -162,6 +162,16 @@ namespace WoWTagLib.DataSources
             if(!tag.AllowMultiple)
                 tagsForFDID.RemoveAll(t => t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
 
+            if(tag.Type == TagType.Preset)
+            {
+                var preset = tag.Presets.FirstOrDefault(p => p.Option.Equals(tagValue, StringComparison.OrdinalIgnoreCase));
+                if (preset == null)
+                    throw new Exception($"Tag '{tagKey}' does not have a preset option '{tagValue}'.");
+            }
+
+            if (tagsForFDID.Any(t => t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && t.TagSource == source && t.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase)))
+                return;
+
             tagsForFDID.Add((tag.Key, source, tagValue));
 
             UnsavedChanges = true;
