@@ -1,0 +1,5 @@
+Option,Description,Aliases
+Mixed,Partially encrypted/available,
+Encrypted (Known),File is encrypted with a known key,
+Encrypted (Unknown),File is encrypted with an unknown key,
+Not Encrypted (Deduped),Should be encrypted but isn't due to CASC deduplication,

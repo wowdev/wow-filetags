@@ -21,3 +21,4 @@ SpellName,SpellName,Spell names using this file,Custom,Classification,True
 ItemName,ItemName,Item names using this file,Custom,Classification,True
 M2Size,M2 Size,Physical size of M2 model,Preset,Classification,False
 M2Complexity,M2 Complexity,M2 model complexity (todo: vertice count based? more?),Preset,Classification,False
+EncryptionStatus,Encryption Status,CASC encryption status of a file,Preset,Technical,False
