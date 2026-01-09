@@ -14,18 +14,13 @@ namespace WoWTagLib.AutoTagging
             DataSource = dataSource;
         }
 
-        public void RunTagger(string tagger)
+        public static void RunTagger(string tagger)
         {
             // Get class type from name
-            var taggerType = Type.GetType("WoWTagLib.AutoTagging.Taggers." + tagger);
-            if (taggerType == null)
-                throw new Exception("Tagger type not found: " + tagger);
+            var taggerType = Type.GetType("WoWTagLib.AutoTagging.Taggers." + tagger) ?? throw new Exception("Tagger type not found: " + tagger);
 
             // Invoke static Tag method
-            var tagMethod = taggerType.GetMethod("Tag");
-            if (tagMethod == null)
-                throw new Exception("Tag method not found in tagger: " + tagger);
-
+            var tagMethod = taggerType.GetMethod("Tag") ?? throw new Exception("Tag method not found in tagger: " + tagger);
             tagMethod.Invoke(null, null);
         }
 

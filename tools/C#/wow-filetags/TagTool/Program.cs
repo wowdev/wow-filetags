@@ -91,7 +91,7 @@ namespace TagTool
                 foreach (var tagger in availableTaggers)
                 {
                     Console.WriteLine("Running autotagger: " + tagger);
-                    autoTagger.RunTagger(tagger);
+                    AutoTagger.RunTagger(tagger);
                 }
                 repo.Save();
             }
