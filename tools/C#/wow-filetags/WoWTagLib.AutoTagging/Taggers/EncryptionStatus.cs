@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using TACTSharp;
+﻿using TACTSharp;
 using WoWTagLib.AutoTagging.Services;
 
 namespace WoWTagLib.AutoTagging.Taggers
@@ -8,7 +7,7 @@ namespace WoWTagLib.AutoTagging.Taggers
     {
         public static void Tag()
         {
-            if(AutoTagger.DataSource == null)
+            if (AutoTagger.DataSource == null)
                 throw new Exception("AutoTagger DataSource is not initialized.");
 
             var encryptionKeyList = CASCManager.GetEncryptionKeyList();
@@ -29,7 +28,7 @@ namespace WoWTagLib.AutoTagging.Taggers
                 else
                     encryptionStatus = "Encrypted (Unknown)";
 
-                lock(tagLock)
+                lock (tagLock)
                     AutoTagger.DataSource.AddTagToFDID((int)encryptedFile.Key, "EncryptionStatus", "Auto", encryptionStatus);
 
             }

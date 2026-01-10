@@ -65,12 +65,20 @@ namespace WoWTagLib.DataSources
 
         public void AddOrUpdateTag(string name, string key, string description, string type, string category, bool allowMultiple)
         {
+            var tagType = type.ToLowerInvariant() switch
+            {
+                "custom" => TagType.Custom,
+                "preset" => TagType.Preset,
+                "presetsplit" => TagType.PresetSplit,
+                _ => throw new Exception("Unsupported tag type")
+            };
+
             var newTag = new Tag
             {
                 Key = key,
                 Name = name,
                 Description = description,
-                Type = type == "Custom" ? TagType.Custom : TagType.Preset,
+                Type = tagType,
                 Category = category,
                 AllowMultiple = allowMultiple,
                 Presets = []
@@ -147,6 +155,22 @@ namespace WoWTagLib.DataSources
             UnsavedChanges = true;
         }
 
+        public string? GetTagOptionByAlias(string tagKey, string alias)
+        {
+            var targetTag = Tags.FirstOrDefault(t => t.Key == tagKey);
+            if (targetTag == null)
+                throw new Exception($"Tag with key '{tagKey}' does not exist in the repository.");
+
+            foreach (var preset in targetTag.Presets)
+            {
+                var aliases = preset.Aliases.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (aliases.Any(a => a.Equals(alias, StringComparison.OrdinalIgnoreCase)) || preset.Option.Equals(alias, StringComparison.OrdinalIgnoreCase))
+                    return preset.Option;
+            }
+
+            return null;
+        }
+
         public void AddTagToFDID(int fileDataID, string tagKey, string tagSource, string tagValue)
         {
             if (!Enum.TryParse<MappingSource>(tagSource, out var source))
@@ -159,10 +183,10 @@ namespace WoWTagLib.DataSources
             if (!FileDataIDMap.TryGetValue(fileDataID, out var tagsForFDID))
                 FileDataIDMap[fileDataID] = tagsForFDID = [];
 
-            if(!tag.AllowMultiple)
+            if (!tag.AllowMultiple)
                 tagsForFDID.RemoveAll(t => t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
 
-            if(tag.Type == TagType.Preset)
+            if (tag.Type == TagType.Preset || tag.Type == TagType.PresetSplit)
             {
                 var preset = tag.Presets.FirstOrDefault(p => p.Option.Equals(tagValue, StringComparison.OrdinalIgnoreCase));
                 if (preset == null)
@@ -173,6 +197,16 @@ namespace WoWTagLib.DataSources
                 return;
 
             tagsForFDID.Add((tag.Key, source, tagValue));
+
+            UnsavedChanges = true;
+        }
+
+        public void RemoveTagFromFDID(int fileDataID, string tagKey)
+        {
+            if (!FileDataIDMap.TryGetValue(fileDataID, out var tagsForFDID))
+                return;
+
+            FileDataIDMap[fileDataID] = [.. tagsForFDID.Where(t => !t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase))];
 
             UnsavedChanges = true;
         }
@@ -205,7 +239,7 @@ namespace WoWTagLib.DataSources
 
             foreach (var tag in Tags)
             {
-                if (tag.Type == TagType.Preset)
+                if (tag.Type == TagType.Preset || tag.Type == TagType.PresetSplit)
                 {
                     var presetsFile = Path.Combine(Folder, "presets", $"{tag.Key}.csv");
                     if (!File.Exists(presetsFile))
@@ -230,30 +264,68 @@ namespace WoWTagLib.DataSources
                     Tags[Tags.FindIndex(t => t.Key == tag.Key)].Presets = tagPresets;
                 }
 
-                var mappingFile = Path.Combine(Folder, "mappings", $"{tag.Key}.csv");
-                if (!File.Exists(mappingFile))
+                if (tag.Type == TagType.Preset || tag.Type == TagType.Custom)
                 {
-                    if (Verbose)
-                        Console.WriteLine("!!! Missing mapping file for tag: " + tag.Key);
-
-                    if (Verify)
-                        throw new FileNotFoundException("Missing mapping file for tag: " + tag.Key);
-
-                    continue;
-                }
-
-                using (var reader = new StreamReader(mappingFile))
-                using (var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
-                {
-                    var mappings = csv.GetRecords<TagMapping>();
-                    foreach (var mapping in mappings)
+                    var mappingFile = Path.Combine(Folder, "mappings", $"{tag.Key}.csv");
+                    if (!File.Exists(mappingFile))
                     {
-                        if (!FileDataIDMap.ContainsKey(mapping.FDID))
-                            FileDataIDMap[mapping.FDID] = [];
+                        if (Verbose)
+                            Console.WriteLine("!!! Missing mapping file for tag: " + tag.Key);
 
-                        FileDataIDMap[mapping.FDID].Add((tag.Key, mapping.Source, mapping.Value));
+                        if (Verify)
+                            throw new FileNotFoundException("Missing mapping file for tag: " + tag.Key);
+
+                        continue;
+                    }
+
+                    using (var reader = new StreamReader(mappingFile))
+                    using (var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+                    {
+                        var mappings = csv.GetRecords<TagMapping>();
+                        foreach (var mapping in mappings)
+                        {
+                            if (!FileDataIDMap.ContainsKey(mapping.FDID))
+                                FileDataIDMap[mapping.FDID] = [];
+
+                            FileDataIDMap[mapping.FDID].Add((tag.Key, mapping.Source, mapping.Value));
+                        }
                     }
                 }
+                else if (tag.Type == TagType.PresetSplit)
+                {
+                    foreach (var presetOption in tag.Presets)
+                    {
+                        var mappingFile = Path.Combine(Folder, "mappings", tag.Key, $"{presetOption.Option}.csv");
+                        if (!File.Exists(mappingFile))
+                        {
+                            if (Verbose)
+                                Console.WriteLine("!!! Missing mapping file for tag " + tag.Key + " and option " + presetOption.Option);
+
+                            if (Verify)
+                                throw new FileNotFoundException("Missing mapping file for tag " + tag.Key + " and option " + presetOption.Option);
+
+                            continue;
+                        }
+
+                        using (var reader = new StreamReader(mappingFile))
+                        using (var csv = new CsvHelper.CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture))
+                        {
+                            var mappings = csv.GetRecords<TagMappingSplit>();
+                            foreach (var mapping in mappings)
+                            {
+                                if (!FileDataIDMap.ContainsKey(mapping.FDID))
+                                    FileDataIDMap[mapping.FDID] = [];
+
+                                FileDataIDMap[mapping.FDID].Add((tag.Key, mapping.Source, presetOption.Option));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("Unsupported Tag type " + tag.Type + " for tag: " + tag.Key);
+                }
+
             }
         }
 
@@ -272,7 +344,7 @@ namespace WoWTagLib.DataSources
             // Presets
             foreach (var tag in Tags)
             {
-                if (tag.Type == TagType.Preset)
+                if (tag.Type == TagType.Preset || tag.Type == TagType.PresetSplit)
                 {
                     var presetsFile = Path.Combine(Folder, "presets", $"{tag.Key}.csv");
                     using (var writer = new StreamWriter(presetsFile))
@@ -288,35 +360,77 @@ namespace WoWTagLib.DataSources
             // Mappings
             foreach (var tag in Tags)
             {
-                var mappingFile = Path.Combine(Folder, "mappings", $"{tag.Key}.csv");
-                var mappings = new List<TagMapping>();
-                foreach (var mapEntry in FileDataIDMap)
+                if (tag.Type == TagType.Custom || tag.Type == TagType.Preset)
                 {
-                    var fdid = mapEntry.Key;
-                    var entries = mapEntry.Value;
-
-                    foreach (var entry in entries)
+                    var mappingFile = Path.Combine(Folder, "mappings", $"{tag.Key}.csv");
+                    var mappings = new List<TagMapping>();
+                    foreach (var mapEntry in FileDataIDMap)
                     {
-                        if (entry.Tag == tag.Key)
+                        var fdid = mapEntry.Key;
+                        var entries = mapEntry.Value;
+
+                        foreach (var entry in entries)
                         {
-                            mappings.Add(new TagMapping
+                            if (entry.Tag == tag.Key)
                             {
-                                FDID = fdid,
-                                Source = entry.TagSource,
-                                Value = entry.TagValue
-                            });
+                                mappings.Add(new TagMapping
+                                {
+                                    FDID = fdid,
+                                    Source = entry.TagSource,
+                                    Value = entry.TagValue
+                                });
+                            }
+                        }
+                    }
+
+                    mappings = [.. mappings.OrderBy(x => x.FDID)];
+
+                    using (var writer = new StreamWriter(mappingFile))
+                    using (var csv = new CsvHelper.CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+                    {
+                        csv.WriteHeader<TagMapping>();
+                        csv.NextRecord();
+                        csv.WriteRecords(mappings);
+                    }
+                }
+                else if (tag.Type == TagType.PresetSplit)
+                {
+                    foreach(var presetOption in tag.Presets)
+                    {
+                        Directory.CreateDirectory(Path.Combine(Folder, "mappings", tag.Key));
+                        var mappingFile = Path.Combine(Folder, "mappings", tag.Key, $"{presetOption.Option}.csv");
+                        var mappings = new List<TagMappingSplit>();
+                        foreach (var mapEntry in FileDataIDMap)
+                        {
+                            var fdid = mapEntry.Key;
+                            var entries = mapEntry.Value;
+                            foreach (var entry in entries)
+                            {
+                                if (entry.Tag == tag.Key && entry.TagValue == presetOption.Option)
+                                {
+                                    mappings.Add(new TagMappingSplit
+                                    {
+                                        FDID = fdid,
+                                        Source = entry.TagSource
+                                    });
+                                }
+                            }
+                        }
+
+                        mappings = [.. mappings.OrderBy(x => x.FDID)];
+
+                        using (var writer = new StreamWriter(mappingFile))
+                         using (var csv = new CsvHelper.CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+                        {
+                            csv.WriteHeader<TagMappingSplit>();
+                            csv.NextRecord();
+                            csv.WriteRecords(mappings);
                         }
                     }
                 }
-
-                mappings = [.. mappings.OrderBy(x => x.FDID)];
-
-                using (var writer = new StreamWriter(mappingFile))
-                using (var csv = new CsvHelper.CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+                else
                 {
-                    csv.WriteHeader<TagMapping>();
-                    csv.NextRecord();
-                    csv.WriteRecords(mappings);
+                    throw new Exception("Unsupported Tag type " + tag.Type + " for tag: " + tag.Key);
                 }
             }
 

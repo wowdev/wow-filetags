@@ -1,5 +1,5 @@
-﻿using TACTSharp;
-using WoWTagLib.AutoTagging;
+﻿using WoWTagLib.AutoTagging;
+using WoWTagLib.AutoTagging.Services;
 
 namespace TagTool
 {
@@ -34,65 +34,25 @@ namespace TagTool
                 repo.AddTagToFDID(fdid, tagKey, tagSource, tagValue);
                 repo.Save();
             }
-            else if(mode == "autotag")
+            else if (mode == "autotag")
             {
                 var repo = new WoWTagLib.DataSources.Repository(args[1], verify: true, verbose: true);
                 var tactProduct = args[2];
 
-                Console.WriteLine("Initializing TACTSharp instance for " + tactProduct + "...");
-                var buildInstance = new BuildInstance();
-
-                buildInstance.Settings.Product = tactProduct;
-
-                var versions = buildInstance.cdn.GetPatchServiceFile(tactProduct).Result;
-                foreach (var line in versions.Split('\n'))
-                {
-                    if (!line.StartsWith(buildInstance.Settings.Region + "|"))
-                        continue;
-
-                    var splitLine = line.Split('|');
-
-                    if (buildInstance.Settings.BuildConfig == null)
-                        buildInstance.Settings.BuildConfig = splitLine[1];
-
-                    if (buildInstance.Settings.CDNConfig == null)
-                        buildInstance.Settings.CDNConfig = splitLine[2];
-
-                    if (splitLine.Length >= 7 && !string.IsNullOrEmpty(splitLine[6]))
-                        buildInstance.Settings.ProductConfig = splitLine[6];
-                }
-
-                buildInstance.Settings.Locale = RootInstance.LocaleFlags.enUS;
-                buildInstance.Settings.Region = "eu";
-                buildInstance.Settings.RootMode = RootInstance.LoadMode.Normal;
-                //buildInstance.Settings.CDNDir = SettingsManager.CDNFolder;
-
-                buildInstance.Settings.AdditionalCDNs.AddRange(["casc.wago.tools", "cdn.arctium.tools"]);
-
-                if (!string.IsNullOrEmpty(args[4]))
-                {
-                    buildInstance.Settings.BaseDir = args[4];
-                    buildInstance.cdn.OpenLocal();
-                }
-
-                buildInstance.LoadConfigs(buildInstance.Settings.BuildConfig, buildInstance.Settings.CDNConfig);
-
-                if (buildInstance.BuildConfig == null || buildInstance.CDNConfig == null)
-                    throw new Exception("Failed to load build configs");
-
-                buildInstance.Load();
-
-                if (buildInstance.Encoding == null || buildInstance.Root == null || buildInstance.Install == null || buildInstance.GroupIndex == null)
-                    throw new Exception("Failed to load build components");
+                var basedir = args.Length > 4 ? args[4] : "";
+                var buildInstance = CASCManager.NewBuildInstance(tactProduct, basedir);
 
                 var autoTagger = new AutoTagger(buildInstance, repo);
-                //autoTagger.RunTagger("FileType");
-                var availableTaggers = AutoTagger.ListTaggers();
-                foreach (var tagger in availableTaggers)
+                if (args.Length > 3 && !string.IsNullOrEmpty(args[3]) && args[3] == "all")
                 {
-                    Console.WriteLine("Running autotagger: " + tagger);
-                    AutoTagger.RunTagger(tagger);
+                    var availableTaggers = AutoTagger.ListTaggers();
+                    foreach (var tagger in availableTaggers)
+                    {
+                        Console.WriteLine("Running autotagger: " + tagger);
+                        autoTagger.RunTagger(tagger);
+                    }
                 }
+
                 repo.Save();
             }
             else

@@ -17,6 +17,7 @@ namespace WoWTagLib.Types
     public enum TagType
     {
         Preset,
-        Custom
+        Custom,
+        PresetSplit
     }
 }

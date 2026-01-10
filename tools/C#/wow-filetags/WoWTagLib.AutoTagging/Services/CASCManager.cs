@@ -14,6 +14,56 @@ namespace WoWTagLib.AutoTagging.Services
         [GeneratedRegex(@"(?<=e:\{)([0-9a-fA-F]{16})(?=,)", RegexOptions.Compiled)]
         private static partial Regex eKeyRegex();
 
+        public static BuildInstance NewBuildInstance(string product, string basedir = "")
+        {
+            Console.WriteLine("Initializing TACTSharp instance for " + product + "...");
+            var buildInstance = new BuildInstance();
+
+            buildInstance.Settings.Product = product;
+
+            var versions = buildInstance.cdn.GetPatchServiceFile(product).Result;
+            foreach (var line in versions.Split('\n'))
+            {
+                if (!line.StartsWith(buildInstance.Settings.Region + "|"))
+                    continue;
+
+                var splitLine = line.Split('|');
+
+                if (buildInstance.Settings.BuildConfig == null)
+                    buildInstance.Settings.BuildConfig = splitLine[1];
+
+                if (buildInstance.Settings.CDNConfig == null)
+                    buildInstance.Settings.CDNConfig = splitLine[2];
+
+                if (splitLine.Length >= 7 && !string.IsNullOrEmpty(splitLine[6]))
+                    buildInstance.Settings.ProductConfig = splitLine[6];
+            }
+
+            buildInstance.Settings.Locale = RootInstance.LocaleFlags.enUS;
+            buildInstance.Settings.Region = "eu";
+            buildInstance.Settings.RootMode = RootInstance.LoadMode.Normal;
+            //buildInstance.Settings.CDNDir = SettingsManager.CDNFolder;
+
+            buildInstance.Settings.AdditionalCDNs.AddRange(["casc.wago.tools", "cdn.arctium.tools"]);
+
+            if (!string.IsNullOrEmpty(basedir))
+            {
+                buildInstance.Settings.BaseDir = basedir;
+                buildInstance.cdn.OpenLocal();
+            }
+
+            buildInstance.LoadConfigs(buildInstance.Settings.BuildConfig, buildInstance.Settings.CDNConfig);
+
+            if (buildInstance.BuildConfig == null || buildInstance.CDNConfig == null)
+                throw new Exception("Failed to load build configs");
+
+            buildInstance.Load();
+
+            if (buildInstance.Encoding == null || buildInstance.Root == null || buildInstance.Install == null || buildInstance.GroupIndex == null)
+                throw new Exception("Failed to load build components");
+
+            return buildInstance;
+        }
 
         public static void InitializeTACT(ref BuildInstance build)
         {
@@ -87,9 +137,17 @@ namespace WoWTagLib.AutoTagging.Services
             return statusList;
         }
 
+        public static string GetCurrentBaseDir()
+        {
+            if (buildInstance == null)
+                throw new Exception("TACTSharp BuildInstance is not initialized.");
+
+            return buildInstance.Settings.BaseDir == null ? "" : buildInstance.Settings.BaseDir;
+        }
+
         public static async Task<Stream> GetFileByID(uint filedataid)
         {
-            if (buildInstance == null || buildInstance.Root == null)
+            if (buildInstance == null)
                 throw new Exception("TACTSharp BuildInstance is not initialized.");
 
             return new MemoryStream(buildInstance.OpenFileByFDID(filedataid));

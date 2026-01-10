@@ -7,6 +7,12 @@
         public required string Value { get; init; }
     }
 
+    public record TagMappingSplit
+    {
+        public required int FDID { get; init; }
+        public required MappingSource Source { get; init; }
+    }
+
     public enum MappingSource
     {
         Auto,

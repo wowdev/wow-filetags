@@ -50,12 +50,22 @@ namespace WoWTagLib.Interfaces
         public void DeleteTagOption(string tagKey, string name);
 
         /// <summary>
+        /// Get a tag option by alias.
+        /// </summary>
+        public string? GetTagOptionByAlias(string tagKey, string alias);
+
+        /// <summary>
         /// Maps a FileDataID to a tag & value.
         /// </summary>
         public void AddTagToFDID(int fileDataID, string tagKey, string tagSource, string tagValue);
 
         /// <summary>
         /// Remove tag from a FileDataID.
+        /// </summary>
+        public void RemoveTagFromFDID(int fileDataID, string tagKey);
+
+        /// <summary>
+        /// Remove tag from a FileDataID by value.
         /// </summary>
         public void RemoveTagFromFDID(int fileDataID, string tagKey, string tagValue);
 
