@@ -17,6 +17,9 @@ Available tags are specified in this file.
     - `Preset` for tags limited to preset options (see presets below)
     - `PresetSplit` for preset options with split mappings
     - `Custom` for tags with no preset options
+- Source:
+    - `Auto` for tags that are automatically updated. Existing values can/will be overwritten by automated tooling.
+    - `Manual` for tags that have manual values. Existing values can not be overwritten by automated tooling.
 - Category: Tag category, e.g. "Technical", "Historical", "Classification" or "Location"
 - AllowMultiple: Boolean, whether multiple tag values for the same file are allowed
 
@@ -35,7 +38,6 @@ Mappings between FileDataIDs and tag values.
 
 #### Fields
 - FDID: FileDataID of file
-- Source: `Auto` for automated mappings by tools or `Manual`.`Auto` mappings can be remapped by automated tools, manual mappings can not
 - Value: Value of tag, if tag is a preset tag this should match `Option` exactly
 
 ### mappings/(tag key)/(preset option).csv
@@ -43,7 +45,6 @@ Mappings between FileDataIDs and tag values split up by preset option. This is f
 
 #### Fields
 - FDID: FileDataID of file
-- Source: `Auto` for automated mappings by tools or `Manual`.`Auto` mappings can be remapped by automated tools, manual mappings can not
 
 ## Release formats
 ### SQLite database

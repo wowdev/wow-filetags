@@ -71,8 +71,8 @@ namespace WoWTagLib.AutoTagging.Taggers
                 var tagOption = productToTagOption[wowProduct];
                 foreach (var fdid in availableIDsPerProduct[wowProduct])
                 {
-                    AutoTagger.DataSource.AddTagToFDID((int)fdid, "FileBranchCurrent", "Auto", tagOption);
-                    AutoTagger.DataSource.AddTagToFDID((int)fdid, "FileBranchHistorical", "Auto", tagOption);
+                    AutoTagger.DataSource.AddTagToFDID((int)fdid, "FileBranchCurrent", tagOption);
+                    AutoTagger.DataSource.AddTagToFDID((int)fdid, "FileBranchHistorical", tagOption);
                 }
             }
         }

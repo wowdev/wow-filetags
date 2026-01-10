@@ -8,6 +8,7 @@ namespace WoWTagLib.Types
         public required string Name { get; init; }
         public required string Description { get; init; }
         public required TagType Type { get; init; }
+        public required TagSource Source { get; init; }
         public required string Category { get; init; }
         public required bool AllowMultiple { get; init; }
         [Ignore]
@@ -19,5 +20,11 @@ namespace WoWTagLib.Types
         Preset,
         Custom,
         PresetSplit
+    }
+
+    public enum TagSource
+    {
+        Auto,
+        Manual
     }
 }

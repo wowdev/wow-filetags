@@ -30,13 +30,12 @@ namespace TagTool
                 int fdid = int.Parse(args[2]);
                 string tagKey = args[3];
                 string tagValue = args[4];
-                string tagSource = args[5];
-                repo.AddTagToFDID(fdid, tagKey, tagSource, tagValue);
+                repo.AddTagToFDID(fdid, tagKey, tagValue);
                 repo.Save();
             }
             else if (mode == "autotag")
             {
-                var repo = new WoWTagLib.DataSources.Repository(args[1], verify: true, verbose: true);
+                var repo = new WoWTagLib.DataSources.Repository(args[1], verify: false, verbose: true);
                 var tactProduct = args[2];
 
                 var basedir = args.Length > 4 ? args[4] : "";

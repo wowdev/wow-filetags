@@ -12,7 +12,7 @@ namespace WoWTagLib.DataSources
         private bool UnsavedChanges;
 
         public List<Tag> Tags = [];
-        public Dictionary<int, List<(string Tag, MappingSource TagSource, string TagValue)>> FileDataIDMap = [];
+        public Dictionary<int, List<(string Tag, string TagValue)>> FileDataIDMap = [];
 
         public Repository(string folder, bool verify = false, bool verbose = false)
         {
@@ -29,9 +29,9 @@ namespace WoWTagLib.DataSources
 
         public List<Tag> GetTags() => Tags;
 
-        public Dictionary<int, List<(string Tag, MappingSource TagSource, string TagValue)>> GetFileDataIDMap() => FileDataIDMap;
+        public Dictionary<int, List<(string Tag, string TagValue)>> GetFileDataIDMap() => FileDataIDMap;
 
-        public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID)
+        public List<(string Tag, string TagValue)> GetTagsByFileDataID(int fileDataID)
         {
             if (FileDataIDMap.TryGetValue(fileDataID, out var tags))
                 return tags;
@@ -39,31 +39,31 @@ namespace WoWTagLib.DataSources
                 return [];
         }
 
-        public List<(int FileDataID, MappingSource TagSource, string TagValue)> GetFileDataIDsByTag(string tagKey)
+        public List<(int FileDataID, string TagValue)> GetFileDataIDsByTag(string tagKey)
         {
             // TODO: This likely won't scale for obvious reasons. Might need a separate lookup, but need to beware of RAM in this economy. Revisit later.
-            var results = new List<(int FileDataID, MappingSource TagSource, string TagValue)>();
+            var results = new List<(int FileDataID, string TagValue)>();
             foreach (var entry in FileDataIDMap)
                 foreach (var tag in entry.Value)
                     if (tag.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase))
-                        results.Add((entry.Key, tag.TagSource, tag.TagValue));
+                        results.Add((entry.Key, tag.TagValue));
 
             return results;
         }
 
-        public List<(int FileDataID, MappingSource TagSource)> GetFileDataIDsByTagAndValue(string tagKey, string tagValue)
+        public List<int> GetFileDataIDsByTagAndValue(string tagKey, string tagValue)
         {
             // TODO: This likely won't scale for obvious reasons. Might need a separate lookup, but need to beware of RAM in this economy. Revisit later.
-            var results = new List<(int FileDataID, MappingSource TagSource)>();
+            var results = new List<int>();
             foreach (var entry in FileDataIDMap)
                 foreach (var tag in entry.Value)
                     if (tag.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && tag.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase))
-                        results.Add((entry.Key, tag.TagSource));
+                        results.Add(entry.Key);
 
             return results;
         }
 
-        public void AddOrUpdateTag(string name, string key, string description, string type, string category, bool allowMultiple)
+        public void AddOrUpdateTag(string name, string key, string description, string type, string source, string category, bool allowMultiple)
         {
             var tagType = type.ToLowerInvariant() switch
             {
@@ -73,12 +73,20 @@ namespace WoWTagLib.DataSources
                 _ => throw new Exception("Unsupported tag type")
             };
 
+            var tagSource = source.ToLowerInvariant() switch
+            {
+                "auto" => TagSource.Auto,
+                "manual" => TagSource.Manual,
+                _ => throw new Exception("Tag source must be either 'Auto' or 'Manual'.")
+            };
+
             var newTag = new Tag
             {
                 Key = key,
                 Name = name,
                 Description = description,
                 Type = tagType,
+                Source = tagSource,
                 Category = category,
                 AllowMultiple = allowMultiple,
                 Presets = []
@@ -171,11 +179,8 @@ namespace WoWTagLib.DataSources
             return null;
         }
 
-        public void AddTagToFDID(int fileDataID, string tagKey, string tagSource, string tagValue)
+        public void AddTagToFDID(int fileDataID, string tagKey, string tagValue)
         {
-            if (!Enum.TryParse<MappingSource>(tagSource, out var source))
-                throw new Exception($"Invalid tag source '{tagSource}'.");
-
             var tag = Tags.FirstOrDefault(t => t.Key.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
             if (tag == null)
                 throw new Exception($"Tag '{tagKey}' does not exist in the repository.");
@@ -193,10 +198,10 @@ namespace WoWTagLib.DataSources
                     throw new Exception($"Tag '{tagKey}' does not have a preset option '{tagValue}'.");
             }
 
-            if (tagsForFDID.Any(t => t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && t.TagSource == source && t.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase)))
+            if (tagsForFDID.Any(t => t.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && t.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase)))
                 return;
 
-            tagsForFDID.Add((tag.Key, source, tagValue));
+            tagsForFDID.Add((tag.Key, tagValue));
 
             UnsavedChanges = true;
         }
@@ -223,6 +228,9 @@ namespace WoWTagLib.DataSources
 
         public void Load()
         {
+            if (Verbose)
+                Console.WriteLine("Loading tag database..");
+
             Tags = [];
             FileDataIDMap = [];
             UnsavedChanges = false;
@@ -287,7 +295,7 @@ namespace WoWTagLib.DataSources
                             if (!FileDataIDMap.ContainsKey(mapping.FDID))
                                 FileDataIDMap[mapping.FDID] = [];
 
-                            FileDataIDMap[mapping.FDID].Add((tag.Key, mapping.Source, mapping.Value));
+                            FileDataIDMap[mapping.FDID].Add((tag.Key, mapping.Value));
                         }
                     }
                 }
@@ -316,7 +324,7 @@ namespace WoWTagLib.DataSources
                                 if (!FileDataIDMap.ContainsKey(mapping.FDID))
                                     FileDataIDMap[mapping.FDID] = [];
 
-                                FileDataIDMap[mapping.FDID].Add((tag.Key, mapping.Source, presetOption.Option));
+                                FileDataIDMap[mapping.FDID].Add((tag.Key, presetOption.Option));
                             }
                         }
                     }
@@ -325,12 +333,17 @@ namespace WoWTagLib.DataSources
                 {
                     throw new Exception("Unsupported Tag type " + tag.Type + " for tag: " + tag.Key);
                 }
-
             }
+
+            if (Verbose)
+                Console.WriteLine("Loaded " + Tags.Count + " tags and " + FileDataIDMap.Count + " FileDataID mappings.");
         }
 
         public void Save()
         {
+            if (Verbose)
+                Console.WriteLine("Saving tag database..");
+
             // Tags
             var tagsFile = Path.Combine(Folder, "meta", "tags.csv");
             using (var writer = new StreamWriter(tagsFile))
@@ -376,7 +389,6 @@ namespace WoWTagLib.DataSources
                                 mappings.Add(new TagMapping
                                 {
                                     FDID = fdid,
-                                    Source = entry.TagSource,
                                     Value = entry.TagValue
                                 });
                             }
@@ -395,7 +407,7 @@ namespace WoWTagLib.DataSources
                 }
                 else if (tag.Type == TagType.PresetSplit)
                 {
-                    foreach(var presetOption in tag.Presets)
+                    foreach (var presetOption in tag.Presets)
                     {
                         Directory.CreateDirectory(Path.Combine(Folder, "mappings", tag.Key));
                         var mappingFile = Path.Combine(Folder, "mappings", tag.Key, $"{presetOption.Option}.csv");
@@ -410,8 +422,7 @@ namespace WoWTagLib.DataSources
                                 {
                                     mappings.Add(new TagMappingSplit
                                     {
-                                        FDID = fdid,
-                                        Source = entry.TagSource
+                                        FDID = fdid
                                     });
                                 }
                             }
@@ -420,7 +431,7 @@ namespace WoWTagLib.DataSources
                         mappings = [.. mappings.OrderBy(x => x.FDID)];
 
                         using (var writer = new StreamWriter(mappingFile))
-                         using (var csv = new CsvHelper.CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+                        using (var csv = new CsvHelper.CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
                         {
                             csv.WriteHeader<TagMappingSplit>();
                             csv.NextRecord();
@@ -437,6 +448,9 @@ namespace WoWTagLib.DataSources
             UnsavedChanges = false;
 
             // TODO: Delete any orphaned files from tags that have since been removed or renamed
+
+            if (Verbose)
+                Console.WriteLine("Tag database saved.");
         }
     }
 }

@@ -11,8 +11,7 @@ namespace WoWTagLib.AutoTagging.Taggers
 
             var tagLock = new Lock();
 
-            var currentFiles = AutoTagger.DataSource.GetFileDataIDsByTagAndValue("FileType", "M2 Model");
-            var currentFDIDs = currentFiles.Select(f => (uint)f.FileDataID).ToList();
+            var currentFDIDs = AutoTagger.DataSource.GetFileDataIDsByTagAndValue("FileType", "M2 Model");
 
             Console.WriteLine("[M2 Tagger] Processing " + currentFDIDs.Count + " M2 files...");
 
@@ -20,7 +19,7 @@ namespace WoWTagLib.AutoTagging.Taggers
             {
                 try
                 {
-                    var m2File = await CASCManager.GetFileByID(fdid);
+                    var m2File = await CASCManager.GetFileByID((uint)fdid);
                     using (var bin = new BinaryReader(m2File))
                     {
                         if (bin.ReadUInt32() == 0)
@@ -108,7 +107,7 @@ namespace WoWTagLib.AutoTagging.Taggers
 
                                     if (boundingSphereRadius > 0)
                                         lock (tagLock)
-                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "M2Size", "Auto", sizeTagValue);
+                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "M2Size", sizeTagValue);
 
                                     bin.BaseStream.Position = 264;
                                     var nEvents = bin.ReadUInt32();
@@ -119,7 +118,7 @@ namespace WoWTagLib.AutoTagging.Taggers
                                     var ofsLights = bin.ReadInt32();
                                     if (nLights > 0)
                                         lock (tagLock)
-                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Auto", "Lights");
+                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Lights");
 
 
                                     bin.BaseStream.Position = 304;
@@ -127,12 +126,12 @@ namespace WoWTagLib.AutoTagging.Taggers
                                     var ofsParticles = bin.ReadUInt32();
                                     if (nParticles > 0)
                                         lock (tagLock)
-                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Auto", "Particles");
+                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Particles");
 
                                     bin.BaseStream.Position = ofsAnimations + 8;
                                     if (nAnimations > 1) // not super accurate
                                         lock (tagLock)
-                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Auto", "Animations");
+                                            AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Animations");
 
                                     bin.BaseStream.Position = ofsBones + 8;
                                     for (var i = 0; i < nBones; i++)
@@ -141,7 +140,7 @@ namespace WoWTagLib.AutoTagging.Taggers
                                         var boneFlags = bin.ReadUInt32();
                                         if ((boneFlags & 0x400) != 0)
                                             lock (tagLock)
-                                                AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Auto", "Physics");
+                                                AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Physics");
 
                                         bin.ReadBytes(80);
                                     }
@@ -152,7 +151,7 @@ namespace WoWTagLib.AutoTagging.Taggers
                                         var identifier = System.Text.Encoding.UTF8.GetString(bin.ReadBytes(4));
                                         if (identifier == "$DSL" || identifier == "$DSO")
                                             lock (tagLock)
-                                                AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Auto", "Sounds");
+                                                AutoTagger.DataSource.AddTagToFDID((int)fdid, "ModelFeature", "Sounds");
                                         var data = bin.ReadUInt32();
                                         bin.ReadBytes(24);
                                     }

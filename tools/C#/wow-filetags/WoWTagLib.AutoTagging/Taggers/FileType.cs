@@ -298,7 +298,7 @@ namespace WoWTagLib.AutoTagging.Taggers
 
                             if (!string.IsNullOrEmpty(tagValue))
                                 lock (tagLock)
-                                    AutoTagger.DataSource.AddTagToFDID((int)unknownFile, "FileType", "Auto", tagValue);
+                                    AutoTagger.DataSource.AddTagToFDID((int)unknownFile, "FileType", tagValue);
                         }
                     }
                 }

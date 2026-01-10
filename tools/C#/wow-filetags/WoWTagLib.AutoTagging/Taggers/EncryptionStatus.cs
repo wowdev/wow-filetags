@@ -29,7 +29,7 @@ namespace WoWTagLib.AutoTagging.Taggers
                     encryptionStatus = "Encrypted (Unknown)";
 
                 lock (tagLock)
-                    AutoTagger.DataSource.AddTagToFDID((int)encryptedFile.Key, "EncryptionStatus", "Auto", encryptionStatus);
+                    AutoTagger.DataSource.AddTagToFDID((int)encryptedFile.Key, "EncryptionStatus", encryptionStatus);
 
             }
 

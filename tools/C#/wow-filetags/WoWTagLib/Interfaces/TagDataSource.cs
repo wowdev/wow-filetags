@@ -12,27 +12,27 @@ namespace WoWTagLib.Interfaces
         /// <summary>
         /// Get FileDataID map.
         /// </summary>
-        public Dictionary<int, List<(string Tag, MappingSource TagSource, string TagValue)>> GetFileDataIDMap();
+        public Dictionary<int, List<(string Tag, string TagValue)>> GetFileDataIDMap();
 
         /// <summary>
         /// Get tags for a specific FileDataID.
         /// </summary>
-        public List<(string Tag, MappingSource TagSource, string TagValue)> GetTagsByFileDataID(int fileDataID);
+        public List<(string Tag, string TagValue)> GetTagsByFileDataID(int fileDataID);
 
         /// <summary>
-        /// Get FileDataIDs (and tag source/value) for a specific tag.
+        /// Get FileDataIDs (and tag value) for a specific tag.
         /// </summary>
-        public List<(int FileDataID, MappingSource TagSource, string TagValue)> GetFileDataIDsByTag(string tagKey);
+        public List<(int FileDataID, string TagValue)> GetFileDataIDsByTag(string tagKey);
 
         /// <summary>
-        /// Get FileDataIDs (and tag source) for a specific tag and value.
+        /// Get FileDataIDs for a specific tag and value.
         /// </summary>
-        public List<(int FileDataID, MappingSource TagSource)> GetFileDataIDsByTagAndValue(string tagKey, string tagValue);
+        public List<int> GetFileDataIDsByTagAndValue(string tagKey, string tagValue);
 
         /// <summary>
         /// Adds or updates a tag.
         /// </summary>
-        public void AddOrUpdateTag(string name, string key, string description, string type, string category, bool allowMultiple);
+        public void AddOrUpdateTag(string name, string key, string description, string type, string source, string category, bool allowMultiple);
 
         /// <summary>
         /// Deletes a tag.
@@ -57,7 +57,7 @@ namespace WoWTagLib.Interfaces
         /// <summary>
         /// Maps a FileDataID to a tag & value.
         /// </summary>
-        public void AddTagToFDID(int fileDataID, string tagKey, string tagSource, string tagValue);
+        public void AddTagToFDID(int fileDataID, string tagKey, string tagValue);
 
         /// <summary>
         /// Remove tag from a FileDataID.

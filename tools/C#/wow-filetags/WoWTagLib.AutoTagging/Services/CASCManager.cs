@@ -14,35 +14,43 @@ namespace WoWTagLib.AutoTagging.Services
         [GeneratedRegex(@"(?<=e:\{)([0-9a-fA-F]{16})(?=,)", RegexOptions.Compiled)]
         private static partial Regex eKeyRegex();
 
-        public static BuildInstance NewBuildInstance(string product, string basedir = "")
+        public static BuildInstance NewBuildInstance(string product, string basedir = "", string buildConfigOverride = "", string cdnConfigOverride = "")
         {
             Console.WriteLine("Initializing TACTSharp instance for " + product + "...");
             var buildInstance = new BuildInstance();
 
             buildInstance.Settings.Product = product;
 
-            var versions = buildInstance.cdn.GetPatchServiceFile(product).Result;
-            foreach (var line in versions.Split('\n'))
+            if(!string.IsNullOrEmpty(buildConfigOverride))
+                buildInstance.Settings.BuildConfig = buildConfigOverride;
+
+            if(!string.IsNullOrEmpty(cdnConfigOverride))
+                buildInstance.Settings.CDNConfig = cdnConfigOverride;
+
+            if (string.IsNullOrEmpty(buildInstance.Settings.BuildConfig) || string.IsNullOrEmpty(buildInstance.Settings.CDNConfig))
             {
-                if (!line.StartsWith(buildInstance.Settings.Region + "|"))
-                    continue;
+                var versions = buildInstance.cdn.GetPatchServiceFile(product).Result;
+                foreach (var line in versions.Split('\n'))
+                {
+                    if (!line.StartsWith(buildInstance.Settings.Region + "|"))
+                        continue;
 
-                var splitLine = line.Split('|');
+                    var splitLine = line.Split('|');
 
-                if (buildInstance.Settings.BuildConfig == null)
-                    buildInstance.Settings.BuildConfig = splitLine[1];
+                    if (buildInstance.Settings.BuildConfig == null)
+                        buildInstance.Settings.BuildConfig = splitLine[1];
 
-                if (buildInstance.Settings.CDNConfig == null)
-                    buildInstance.Settings.CDNConfig = splitLine[2];
+                    if (buildInstance.Settings.CDNConfig == null)
+                        buildInstance.Settings.CDNConfig = splitLine[2];
 
-                if (splitLine.Length >= 7 && !string.IsNullOrEmpty(splitLine[6]))
-                    buildInstance.Settings.ProductConfig = splitLine[6];
+                    if (splitLine.Length >= 7 && !string.IsNullOrEmpty(splitLine[6]))
+                        buildInstance.Settings.ProductConfig = splitLine[6];
+                }
             }
 
             buildInstance.Settings.Locale = RootInstance.LocaleFlags.enUS;
             buildInstance.Settings.Region = "eu";
             buildInstance.Settings.RootMode = RootInstance.LoadMode.Normal;
-            //buildInstance.Settings.CDNDir = SettingsManager.CDNFolder;
 
             buildInstance.Settings.AdditionalCDNs.AddRange(["casc.wago.tools", "cdn.arctium.tools"]);
 
@@ -51,6 +59,9 @@ namespace WoWTagLib.AutoTagging.Services
                 buildInstance.Settings.BaseDir = basedir;
                 buildInstance.cdn.OpenLocal();
             }
+
+            if(buildInstance.Settings.BuildConfig == null || buildInstance.Settings.CDNConfig == null)
+                throw new Exception("BuildConfig or CDNConfig is null");
 
             buildInstance.LoadConfigs(buildInstance.Settings.BuildConfig, buildInstance.Settings.CDNConfig);
 
