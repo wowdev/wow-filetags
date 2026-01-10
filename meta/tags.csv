@@ -23,4 +23,4 @@ M2Size,M2 Size,Physical size of M2 model,Preset,Auto,Classification,False,Suppor
 M2Complexity,M2 Complexity,M2 model complexity (todo: vertice count based? more?),Preset,Auto,Classification,False,Planned
 EncryptionStatus,Encryption Status,CASC encryption status of a file,Preset,Auto,Technical,False,Supported
 FileBranchCurrent,File Branch (Current),Which WoW branch a file is currently present on,PresetSplit,Auto,Technical,True,Supported
-FileBranchHistorical,File Branch (Historical),Which WoW branch a file has historically been present on (and may have been deleted since),PresetSplit,Auto,Technical,True,Supported
+FileBranchHistorical,File Branch (Historical),Which WoW branch a file has historically been present on (and may have been deleted since),PresetSplit,Auto,Technical,True,WIP
