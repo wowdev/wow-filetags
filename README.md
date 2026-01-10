@@ -1,5 +1,5 @@
 # wow-filetags
-**CONCEPT, STILL WORK IN PROGRES**
+**CONCEPT, STILL WORK IN PROGRESS**
 ## Description
 An alternative way of classifying World of Warcraft files. Instead of filenames (see [wow-listfile](https://github.com/wowdev/wow-listfile)) this is a tag-based approach instead.
 ## Repository storage format
@@ -13,7 +13,10 @@ Available tags are specified in this file.
 - Key: Name for tag with no spaces/special chars (used as filename elsewhere)
 - Name: Name, can be same as key but with spaces/special characters
 - Description: Longer description of tag
-- Type: `Preset` for tags limited to preset options (see presets below) or `Custom`
+- Type: 
+    - `Preset` for tags limited to preset options (see presets below)
+    - `PresetSplit` for preset options with split mappings
+    - `Custom` for tags with no preset options
 - Category: Tag category, e.g. "Technical", "Historical", "Classification" or "Location"
 - AllowMultiple: Boolean, whether multiple tag values for the same file are allowed
 
@@ -28,12 +31,19 @@ Preset options for tags with the "Preset" type.
 Mappings between FileDataIDs and tag values. 
 
 > [!NOTE]  
-> Mapping CSVs should remain under 100MB in size. They could realistically only be larger if there was a mapping for each file (or several per file) ***AND*** the option being very long. For a sense of scale, the [community listfile CSV](https://github.com/wowdev/wow-listfile/releases) is currently ~140MB *(which is why it is no longer in the repo, but in releases)*. If we ever approach this, tooling should be adjusted to support split up mappings. They would still be combined for releases similar to the listfile.
+> These CSVs should remain under 100MB in size. If files are starting to get to that size for tags with preset options, consider switching to `PresetSplit` instead (see below). For custom options, probably have shorter values for now, custom tags with split files may be supported in the future.
 
 #### Fields
 - FDID: FileDataID of file
 - Source: `Auto` for automated mappings by tools or `Manual`.`Auto` mappings can be remapped by automated tools, manual mappings can not
 - Value: Value of tag, if tag is a preset tag this should match `Option` exactly
+
+### mappings/(tag key)/(preset option).csv
+Mappings between FileDataIDs and tag values split up by preset option. This is for `PresetSplit` tags with particularly many mappings. Value is implied by filename.
+
+#### Fields
+- FDID: FileDataID of file
+- Source: `Auto` for automated mappings by tools or `Manual`.`Auto` mappings can be remapped by automated tools, manual mappings can not
 
 ## Release formats
 ### SQLite database

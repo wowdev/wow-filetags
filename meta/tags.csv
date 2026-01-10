@@ -22,5 +22,5 @@ ItemName,ItemName,Item names using this file,Custom,Classification,True
 M2Size,M2 Size,Physical size of M2 model,Preset,Classification,False
 M2Complexity,M2 Complexity,M2 model complexity (todo: vertice count based? more?),Preset,Classification,False
 EncryptionStatus,Encryption Status,CASC encryption status of a file,Preset,Technical,False
-FileBranchCurrent,File Branch (Current),Which WoW branch a file is currently present on,Preset,Technical,False
-FileBranchHistorical,File Branch (Historical),Which WoW branch a file has historically been present on (and may have been deleted since),Preset,Technical,False
+FileBranchCurrent,File Branch (Current),Which WoW branch a file is currently present on,PresetSplit,Technical,True
+FileBranchHistorical,File Branch (Historical),Which WoW branch a file has historically been present on (and may have been deleted since),PresetSplit,Technical,True

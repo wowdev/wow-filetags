@@ -1,11 +1,11 @@
 Option,Description,Aliases
-Retail,Mainline Retail Live,
-Retail PTR,Mainline Retail PTR,
-Retail Beta,Mainline Retail Beta,
-Era,Classic Era Live,
-Era PTR,Classic Era PTR,
-Era Beta,Classic Era Beta,
-Classic,Classic Live,
-Classic PTR,Classic PTR,
-Classic Beta,Classic Beta,
-Retail PTR 2,Retail PTR 2,
+Live,Mainline Retail Live,wow
+PTR,Mainline Retail PTR,wowt
+Beta,Mainline Retail Beta,wow_beta
+PTR2,Retail PTR 2,wowxptr
+Era,Classic Era Live,wow_classic_era
+EraT,Classic Era PTR,wow_classic_era_ptr
+EraB,Classic Era Beta,wow_classic_era_beta
+Prog,Classic Progression Live,wow_classic
+ProgT,Classic Progression PTR,wow_classic_ptr
+ProgB,Classic Progression Beta,wow_classic_beta
