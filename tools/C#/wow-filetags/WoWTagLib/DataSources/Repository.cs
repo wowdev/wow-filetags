@@ -55,9 +55,27 @@ namespace WoWTagLib.DataSources
         {
             // TODO: This likely won't scale for obvious reasons. Might need a separate lookup, but need to beware of RAM in this economy. Revisit later.
             var results = new List<int>();
+
+            var tag = Tags.FirstOrDefault(t => t.Key.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
+            if (tag == null)
+                return results;
+
+            if(tag.Type == TagType.Preset || tag.Type == TagType.PresetSplit)
+            {
+                var preset = tag.Presets.FirstOrDefault(p => p.Option.Equals(tagValue, StringComparison.OrdinalIgnoreCase));
+                if (preset == null)
+                {
+                    var byAlias = GetTagOptionByAlias(tagKey, tagValue);
+                    if (byAlias != null)
+                        tagValue = byAlias;
+                    else
+                        return results;
+                }
+            }
+
             foreach (var entry in FileDataIDMap)
-                foreach (var tag in entry.Value)
-                    if (tag.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && tag.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase))
+                foreach (var tagMapping in entry.Value)
+                    if (tagMapping.Tag.Equals(tagKey, StringComparison.OrdinalIgnoreCase) && tagMapping.TagValue.Equals(tagValue, StringComparison.OrdinalIgnoreCase))
                         results.Add(entry.Key);
 
             return results;
