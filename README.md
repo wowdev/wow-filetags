@@ -1,7 +1,8 @@
 # wow-filetags
 **CONCEPT, STILL WORK IN PROGRESS**
 ## Description
-An alternative way of classifying World of Warcraft files. Instead of filenames (see [wow-listfile](https://github.com/wowdev/wow-listfile)) this is a tag-based approach instead.
+An alternative way of classifying World of Warcraft files. Instead of filenames (see [wow-listfile](https://github.com/wowdev/wow-listfile)) this is a tag-based approach instead. Targeting the latest mainline/Retail WoW version, although some tags may have information about other branches too (e.g. FileBranch* tags).
+
 ## Repository storage format
 The data is stored in various split-up CSV files inside of this repo. Releases in various other formats for actual consumption by tools are available (see below), but this text-based approach for the repository itself was chosen for easy of editing/tracking purposes.
 
