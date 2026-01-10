@@ -147,7 +147,7 @@ namespace WoWTagLib.DataSources
             if (string.IsNullOrEmpty(name))
                 return;
 
-            var targetTag = Tags.FirstOrDefault(t => t.Key == tagKey);
+            var targetTag = Tags.FirstOrDefault(t => t.Key.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
             if (targetTag == null)
                 throw new Exception($"Tag with key '{tagKey}' does not exist in the repository.");
 
@@ -169,7 +169,7 @@ namespace WoWTagLib.DataSources
 
         public void DeleteTagOption(string tagKey, string name)
         {
-            var targetTag = Tags.FirstOrDefault(t => t.Key == tagKey);
+            var targetTag = Tags.FirstOrDefault(t => t.Key.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
             if (targetTag == null)
                 throw new Exception($"Tag with key '{tagKey}' does not exist in the repository.");
 
@@ -183,7 +183,7 @@ namespace WoWTagLib.DataSources
 
         public string? GetTagOptionByAlias(string tagKey, string alias)
         {
-            var targetTag = Tags.FirstOrDefault(t => t.Key == tagKey);
+            var targetTag = Tags.FirstOrDefault(t => t.Key.Equals(tagKey, StringComparison.OrdinalIgnoreCase));
             if (targetTag == null)
                 throw new Exception($"Tag with key '{tagKey}' does not exist in the repository.");
 
