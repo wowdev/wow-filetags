@@ -1,26 +1,26 @@
-Key,Name,Description,Type,Source,Category,AllowMultiple
-FileType,File Type,"Type of file, e.g. MP3, Group WMO, Root ADT, M2, etc",Preset,Auto,Technical,False
-ExpansionAdded,Expansion (Added),Which expansion the file was added in,Preset,Auto,Historical,False
-PatchAdded,Patch (Added),Which patch the file was added in,Custom,Auto,Historical,False
-BuildAdded,Build (Added),Which build the file was added in,Custom,Auto,Historical,False
-ModelType,Model Type,Type of model,Preset,Auto,Classification,True
-ParentFile,Parent File,Files referencing this file (experimental/limit test),Custom,Auto,Technical,True
-FilenameStatus,Filename Status,"Filename status (tied to wow-listfile repo, automated test)",Preset,Auto,Metadata,True
-Continent,Continent,Continent this file is related to,Custom,Auto,Location,True
-Zone,Zone,Zone this file is related to,Custom,Auto,Location,True
-DoodadSet,Doodad Set,Doodad set this file is a part of,Custom,Auto,Classification,False
-MusicType,Music Type,"Type of music (zone music, scene music, etc)",Preset,Auto,Classification,False
-TextureType,Texture Type,"Type of texture (icon, creature skin, etc)",Preset,Auto,Classification,True
-MountType,Mount Type,"Type of mount (ground, flying, customizable, etc)",Preset,Auto,Classification,True
-ItemSource,Item Source,"Source of related item (e.g. drop, trading post, shop, etc)",Preset,Auto,Classification,True
-ModelFeature,Model Feature,"Model features (e.g. physics, animations, particles)",Preset,Auto,Technical,True
-SoundType,Sound Type,"Sound type (e.g. character, UI, spell, etc)",Preset,Auto,Classification,True
-Race,Race,File is tied to a player/NPC race,Preset,Auto,Classification,True
-CreatureName,CreatureName,Creature name (e.g. NPC or mount name) tied to this file,Custom,Auto,Classification,True
-SpellName,SpellName,Spell names using this file,Custom,Auto,Classification,True
-ItemName,ItemName,Item names using this file,Custom,Auto,Classification,True
-M2Size,M2 Size,Physical size of M2 model,Preset,Auto,Classification,False
-M2Complexity,M2 Complexity,M2 model complexity (todo: vertice count based? more?),Preset,Auto,Classification,False
-EncryptionStatus,Encryption Status,CASC encryption status of a file,Preset,Auto,Technical,False
-FileBranchCurrent,File Branch (Current),Which WoW branch a file is currently present on,PresetSplit,Auto,Technical,True
-FileBranchHistorical,File Branch (Historical),Which WoW branch a file has historically been present on (and may have been deleted since),PresetSplit,Auto,Technical,True
+Key,Name,Description,Type,Source,Category,AllowMultiple,Status
+FileType,File Type,"Type of file, e.g. MP3, Group WMO, Root ADT, M2, etc",Preset,Auto,Technical,False,Supported
+ExpansionAdded,Expansion (Added),Which expansion the file was added in,Preset,Auto,Historical,False,Planned
+PatchAdded,Patch (Added),Which patch the file was added in,Custom,Auto,Historical,False,Planned
+BuildAdded,Build (Added),Which build the file was added in,Custom,Auto,Historical,False,Planned
+ModelType,Model Type,Type of model,Preset,Auto,Classification,True,Planned
+ParentFile,Parent File,Files referencing this file (experimental/limit test),Custom,Auto,Technical,True,Planned
+FilenameStatus,Filename Status,"Filename status (tied to wow-listfile repo, automated test)",Preset,Auto,Metadata,True,Planned
+Continent,Continent,Continent this file is related to,Custom,Auto,Location,True,Planned
+Zone,Zone,Zone this file is related to,Custom,Auto,Location,True,Planned
+DoodadSet,Doodad Set,Doodad set this file is a part of,Custom,Auto,Classification,False,Planned
+MusicType,Music Type,"Type of music (zone music, scene music, etc)",Preset,Auto,Classification,False,Planned
+TextureType,Texture Type,"Type of texture (icon, creature skin, etc)",Preset,Auto,Classification,True,Planned
+MountType,Mount Type,"Type of mount (ground, flying, customizable, etc)",Preset,Auto,Classification,True,Planned
+ItemSource,Item Source,"Source of related item (e.g. drop, trading post, shop, etc)",Preset,Auto,Classification,True,Planned
+ModelFeature,Model Feature,"Model features (e.g. physics, animations, particles)",Preset,Auto,Technical,True,Planned
+SoundType,Sound Type,"Sound type (e.g. character, UI, spell, etc)",Preset,Auto,Classification,True,Planned
+Race,Race,File is tied to a player/NPC race,Preset,Auto,Classification,True,Planned
+CreatureName,CreatureName,Creature name (e.g. NPC or mount name) tied to this file,Custom,Auto,Classification,True,Planned
+SpellName,SpellName,Spell names using this file,Custom,Auto,Classification,True,Planned
+ItemName,ItemName,Item names using this file,Custom,Auto,Classification,True,Planned
+M2Size,M2 Size,Physical size of M2 model,Preset,Auto,Classification,False,Supported
+M2Complexity,M2 Complexity,M2 model complexity (todo: vertice count based? more?),Preset,Auto,Classification,False,Planned
+EncryptionStatus,Encryption Status,CASC encryption status of a file,Preset,Auto,Technical,False,Supported
+FileBranchCurrent,File Branch (Current),Which WoW branch a file is currently present on,PresetSplit,Auto,Technical,True,Supported
+FileBranchHistorical,File Branch (Historical),Which WoW branch a file has historically been present on (and may have been deleted since),PresetSplit,Auto,Technical,True,Supported

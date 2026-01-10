@@ -23,6 +23,11 @@ Available tags are specified in this file.
     - `Manual` for tags that have manual values. Existing values can not be overwritten by automated tooling.
 - Category: Tag category, e.g. "Technical", "Historical", "Classification" or "Location"
 - AllowMultiple: Boolean, whether multiple tag values for the same file are allowed
+- Status: 
+    - `Supported`: mappings are supported/regularly updated
+    - `WIP`: tag/mappings are a work-in-progress
+    - `Planned`: tag is planned but has no mappings yet
+    - `Deprecated`: tag is deprecated and will be removed at some point
 
 ### presets/(tag key).csv
 Preset options for tags with the "Preset" type. 

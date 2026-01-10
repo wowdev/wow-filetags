@@ -11,6 +11,7 @@ namespace WoWTagLib.Types
         public required TagSource Source { get; init; }
         public required string Category { get; init; }
         public required bool AllowMultiple { get; init; }
+        public required TagStatus Status { get; init; }
         [Ignore]
         public List<TagPreset> Presets { get; set; } = [];
     }
@@ -26,5 +27,13 @@ namespace WoWTagLib.Types
     {
         Auto,
         Manual
+    }
+
+    public enum TagStatus
+    {
+        Supported,
+        WIP,
+        Planned,
+        Deprecated
     }
 }

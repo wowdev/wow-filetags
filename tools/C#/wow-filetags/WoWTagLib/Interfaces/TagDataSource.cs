@@ -32,7 +32,7 @@ namespace WoWTagLib.Interfaces
         /// <summary>
         /// Adds or updates a tag.
         /// </summary>
-        public void AddOrUpdateTag(string name, string key, string description, string type, string source, string category, bool allowMultiple);
+        public void AddOrUpdateTag(string name, string key, string description, string type, string source, string category, bool allowMultiple, string status);
 
         /// <summary>
         /// Deletes a tag.

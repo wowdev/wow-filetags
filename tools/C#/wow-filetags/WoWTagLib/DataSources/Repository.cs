@@ -60,7 +60,7 @@ namespace WoWTagLib.DataSources
             if (tag == null)
                 return results;
 
-            if(tag.Type == TagType.Preset || tag.Type == TagType.PresetSplit)
+            if (tag.Type == TagType.Preset || tag.Type == TagType.PresetSplit)
             {
                 var preset = tag.Presets.FirstOrDefault(p => p.Option.Equals(tagValue, StringComparison.OrdinalIgnoreCase));
                 if (preset == null)
@@ -81,7 +81,7 @@ namespace WoWTagLib.DataSources
             return results;
         }
 
-        public void AddOrUpdateTag(string name, string key, string description, string type, string source, string category, bool allowMultiple)
+        public void AddOrUpdateTag(string name, string key, string description, string type, string source, string category, bool allowMultiple, string status)
         {
             var tagType = type.ToLowerInvariant() switch
             {
@@ -98,6 +98,15 @@ namespace WoWTagLib.DataSources
                 _ => throw new Exception("Tag source must be either 'Auto' or 'Manual'.")
             };
 
+            var tagStatus = status.ToLowerInvariant() switch
+            {
+                "supported" => TagStatus.Supported,
+                "wip" => TagStatus.WIP,
+                "planned" => TagStatus.Planned,
+                "deprecated" => TagStatus.Deprecated,
+                _ => throw new Exception("Unsupported tag status")
+            };
+
             var newTag = new Tag
             {
                 Key = key,
@@ -107,6 +116,7 @@ namespace WoWTagLib.DataSources
                 Source = tagSource,
                 Category = category,
                 AllowMultiple = allowMultiple,
+                Status = tagStatus,
                 Presets = []
             };
 
