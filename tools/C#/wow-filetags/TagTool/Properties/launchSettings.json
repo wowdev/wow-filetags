@@ -2,7 +2,7 @@
   "profiles": {
     "TagTool": {
       "commandName": "Project",
-      "commandLineArgs": "export ../../../../../../../ tags.db sqlite"
+      "commandLineArgs": "autotag ../../../../../../../ wowt all \"C:/World of Warcraft\""
     }
   }
 }
